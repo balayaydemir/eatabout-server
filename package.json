@@ -6,6 +6,10 @@
   "scripts": {
     "test": "mocha --require test/setup.js",
     "dev": "nodemon src/server.js",
+    "migrate": "postgrator --config postgrator-config.js",
+    "migrate:test": "env NODE_ENV=test npm run migrate",
+    "seed": "psql -U eatabout-admin -d eatabout -f ./seeds/seed.eatabout_tables.sql",
+    "seed:test": "psql -U eatabout-admin -d eatabout-test -f ./seeds/seed.eatabout_tables.sql",
     "start": "node src/server.js",
     "predeploy": "npm audit",
     "deploy": "git push heroku master"
@@ -14,16 +18,22 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "helmet": "^3.21.2",
-    "morgan": "^1.9.1"
+    "jsonwebtoken": "^8.5.1",
+    "knex": "^0.20.2",
+    "morgan": "^1.9.1",
+    "pg": "^7.12.1",
+    "xss": "^1.0.6"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "mocha": "^6.2.2",
     "nodemon": "^1.19.4",
+    "postgrator-cli": "^3.2.0",
     "supertest": "^4.0.2"
   }
 }

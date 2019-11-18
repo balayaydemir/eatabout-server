@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS restaurants;
+
+DROP TABLE IF EXISTS cuisines;
