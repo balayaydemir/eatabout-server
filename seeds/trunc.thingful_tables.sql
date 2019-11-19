@@ -1,6 +1,7 @@
 TRUNCATE
     items,
     entries, 
+    user_restaurants,
     users,
     restaurants,
     cuisines

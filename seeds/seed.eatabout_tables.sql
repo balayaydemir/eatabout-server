@@ -3,8 +3,9 @@ BEGIN;
 TRUNCATE
     items,
     entries, 
-    restaurants,
+    user_restaurants,
     users,
+    restaurants,
     cuisines
     RESTART IDENTITY CASCADE;
 
@@ -38,25 +39,33 @@ VALUES
     ('Colombian'),
     ('Meditteranean');
 
+INSERT INTO restaurants (name, website, cuisine, city, state)
+VALUES
+    ('Restaurant1', 'www.google.com', 3, 'San Diego', 'CA'),
+    ('Restaurant2', 'www.google.com', 4, 'San Diego', 'CA'),
+    ('Restaurant3', 'www.google.com', 3, 'San Diego', 'CA');
+
 INSERT INTO users (user_name, full_name, password)
 VALUES
-    ('demo', 'demo user', 'AgFdWe1337!'),
-    ('balay', 'Balay Aydemir', 'Opiestinks92!'),
-    ('ismail', 'Ismail Aydemir', 'Opiestinks1337!');
+    ('demo', 'demo user', '$2y$12$4KicpRLvnxyD99/Q/JZEnuXsPc1z0CIwfyb6Zix8LrEhvQ6IwQNg.'),
+    ('balay', 'Balay Aydemir', '$2y$12$6ZjKGRO23yGY/rl1oi0sfug6ElHdGRLRkfx95LfPsF/DxlVPwwQka'),
+    ('ismail', 'Ismail Aydemir', '$2y$12$wcJ5lch2oA8SwTz83tM.HeruSZwZPsJktQ.abjFez9wrlCB8IDIxy');
 
-INSERT INTO restaurants (visited, name, website, cuisine, city, state, rating, description)
+INSERT INTO user_restaurants (visited, rating, description, date_visited, restaurant_id, user_id)
 VALUES
-    (false, 'Restaurant1', 'www.google.com', 3, 'San Diego', 'CA', null, 'I want to go here'),
-    (true, 'Restaurant2', 'www.google.com', 4, 'San Diego', 'CA', 3, 'it was ok'),
-    (false, 'Restaurant3', 'www.google.com', 3, 'San Diego', 'CA', null, 'I want to go here');
+    (false, null, null, null, 1, 1),
+    (true, 5, 'so good', now(), 2, 1),
+    (false, null, null, null, 3, 1);
 
-INSERT INTO entries (restaurant_id, user_id)
+INSERT INTO entries (user_restaurant_id, user_id)
 VALUES
     (2, 2);
 
 INSERT INTO items (name, description, entry_id)
 VALUES 
     ('spaghetti', 'good spaghetti', 1);
+
+
 
 
 
