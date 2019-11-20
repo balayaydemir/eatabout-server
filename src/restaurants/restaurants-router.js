@@ -18,62 +18,7 @@ restaurantsRouter
         res.json(RestaurantsService.serializeRestaurants(restaurants));
       })
       .catch(next);
-  });
-
-restaurantsRouter
-  .route('/:restaurant_id')
-  .get(requireAuth, (req, res, next) => {
-    RestaurantsService.getById(
-      req.app.get('db'),
-      req.params.restaurant_id,
-      req.user.id
-    )
-      .then(restaurant => {
-        res.json(RestaurantsService.serializeRestaurant(restaurant));
-      })
-      .catch(next);
-    
-  });
-
-restaurantsRouter
-  .route('/:restaurant_id/entries/')
-  .get(requireAuth, (req, res, next) => {
-    RestaurantsService.getRestaurantEntries(
-      req.app.get('db'),
-      req.params.restaurant_id
-    )
-      .then(entries => {
-        res.json(RestaurantsService.serializeRestaurantEntries(entries));
-      })
-      .catch(next);
-  });
-
-restaurantsRouter
-  .route('/all')
-  .post(requireAuth, jsonBodyParser, (req, res, next) => {
-    const { name, website, cuisine, city, state } = req.body;
-    const newRestaurant = { name, website, cuisine, city, state };
-    for (const [key, value] of Object.entries(newRestaurant))
-      if (value == null)
-        return res.status(400).json({
-          error: `Missing '${key}' in request body`
-        });
-        
-    RestaurantsService.insertRestaurant(
-      req.app.get('db'),
-      newRestaurant
-    )
-      .then(restaurant => {
-        res
-          .status(201)
-          .location(path.posix.join(req.originalUrl, `/${restaurant.id}`))
-          .json(RestaurantsService.serializeRestaurantMain(restaurant));
-      })
-      .catch(next);
-  });
-
-restaurantsRouter
-  .route('/')
+  })
   .post(requireAuth, jsonBodyParser, (req, res, next) => {
     const { visited, rating, description, date_visited, restaurant_id, user_id } = req.body;
     const newUserRestaurantRequired = { visited, restaurant_id, user_id };
@@ -95,13 +40,24 @@ restaurantsRouter
         res
           .status(201)
           .location(path.posix.join(req.originalUrl, `/${restaurant.id}`))
-          .json(RestaurantsService.serializeUserRestaurant(restaurant));
+          .json(restaurant);
       })
       .catch(next);
   });
 
 restaurantsRouter
-  .route('/:restaurant_id')
+  .route('/:restaurant_id(\\d+)')
+  .get(requireAuth, (req, res, next) => {
+    RestaurantsService.getById(
+      req.app.get('db'),
+      req.params.restaurant_id,
+      req.user.id
+    )
+      .then(restaurant => {
+        res.json(RestaurantsService.serializeRestaurant(restaurant));
+      })
+      .catch(next);
+  })
   .patch(requireAuth, jsonBodyParser, (req, res, next) => {
     const { visited, rating, description, date_visited } = req.body;
     const newFields = { visited, rating, description, date_visited };
@@ -121,10 +77,7 @@ restaurantsRouter
         res.status(204).end();
       })
       .catch(next);
-  });
-
-restaurantsRouter
-  .route('/:restaurant_id')
+  })
   .delete(requireAuth, (req, res, next) => {
     RestaurantsService.deleteUserRestaurant(
       req.app.get('db'),
@@ -137,6 +90,19 @@ restaurantsRouter
   });
 
 restaurantsRouter
+  .route('/:restaurant_id/entries/')
+  .get(requireAuth, (req, res, next) => {
+    RestaurantsService.getRestaurantEntries(
+      req.app.get('db'),
+      req.params.restaurant_id
+    )
+      .then(entries => {
+        res.json(RestaurantsService.serializeRestaurantEntries(entries));
+      })
+      .catch(next);
+  });
+
+restaurantsRouter
   .route('/all')
   .get(requireAuth, (req, res, next) => {
     RestaurantsService.getMainRestaurants(
@@ -144,6 +110,27 @@ restaurantsRouter
     )
       .then(restaurants => {
         res.json(RestaurantsService.serializeRestaurantsMain(restaurants));
+      })
+      .catch(next);
+  })
+  .post(requireAuth, jsonBodyParser, (req, res, next) => {
+    const { name, website, cuisine, city, state } = req.body;
+    const newRestaurant = { name, website, cuisine, city, state };
+    for (const [key, value] of Object.entries(newRestaurant))
+      if (value == null)
+        return res.status(400).json({
+          error: `Missing '${key}' in request body`
+        });
+        
+    RestaurantsService.insertRestaurant(
+      req.app.get('db'),
+      newRestaurant
+    )
+      .then(restaurant => {
+        res
+          .status(201)
+          .location(path.posix.join(req.originalUrl, `/${restaurant.id}`))
+          .json(RestaurantsService.serializeRestaurantMain(restaurant));
       })
       .catch(next);
   });

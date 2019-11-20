@@ -60,12 +60,18 @@ VALUES
 
 INSERT INTO entries (user_restaurant_id, user_id)
 VALUES
-    (2, 2);
+    (2, 2),
+    (3, 2),
+    (4, 2);
 
 INSERT INTO items (name, description, entry_id)
 VALUES 
     ('spaghetti', 'good spaghetti', 1),
-    ('appetizer', 'yummy', 1);
+    ('appetizer', 'yummy', 1),
+    ('test', 'test', 2),
+    ('test', 'test', 2),
+    ('test', 'test', 3),
+    ('test', 'test', 3);
 
 
 

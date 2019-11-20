@@ -1,5 +1,5 @@
 const xss = require('xss');
-// const Treeize = require('treeize');
+const Treeize = require('treeize');
 
 const RestaurantsService = {
   getAllRestaurants(db, user_id) {
@@ -13,20 +13,24 @@ const RestaurantsService = {
         'ur.description',
         'ur.date_visited',
         'ur.restaurant_id',
-        'ur.user_id'
+        'ur.user_id',
+        'res.name AS restaurant:name', 
+        'res.website AS restaurant:website', 
+        'res.cuisine AS restaurant:cuisine', 
+        'res.city AS restaurant:city', 
+        'res.state AS restaurant:state',
+        'cus.cuisine_name AS restaurant:cuisine_name'
       )
       .join(
         'restaurants AS res',
         'ur.restaurant_id',
         'res.id'
       )
-      .select('res.name', 'res.website', 'res.cuisine', 'res.city', 'res.state')
       .join(
         'cuisines AS cus',
         'res.cuisine',
         'cus.id'
       )
-      .select('cus.cuisine_name')
       .groupBy('ur.id', 'res.id', 'cus.id');
   },
   getMainRestaurants(db) {
@@ -36,19 +40,28 @@ const RestaurantsService = {
   },
   getById(db, id, user_id) {
     return RestaurantsService.getAllRestaurants(db, user_id)
-      .where('ur.id', id)
-      .first();
+      .where('ur.id', id);
   },
   getRestaurantEntries(db, id) {
     return db
       .from('entries AS ent')
-      .select('*')
+      .select(
+        'ent.id',
+        'ent.date',
+        'ent.user_restaurant_id',
+        'ent.user_id',
+        'itm.name AS items:name',
+        'itm.image AS items:image',
+        'itm.description AS items:description',
+        'itm.entry_id AS items:entry_id'
+      )
       .where('ent.user_restaurant_id', id)
       .join(
         'items AS itm',
         'ent.id',
         'itm.entry_id'
-      );
+      )
+      .groupBy('ent.id', 'itm.id');
   },
   insertRestaurant(db, newRestaurant) {
     return db 
@@ -74,55 +87,27 @@ const RestaurantsService = {
       .where({ id })
       .delete();
   },
-  serializeRestaurants(restaurants) {
-    return restaurants.map(this.serializeRestaurant);
+  serializeRestaurant(restaurant) {
+    return this.serializeRestaurants(restaurant)[0];
   },
-  serializeRestaurant(restaurantData) {
-    // const restaurantTree = new Treeize();
-    // const restaurantData = restaurantTree.grow([ restaurant ]).getData()[0];
-
-    return {
-      id: restaurantData.id,
-      visited: restaurantData.visited,
-      rating: restaurantData.rating,
-      description: xss(restaurantData.description),
-      date_visited: restaurantData.date_visited,
-      restaurant_id: restaurantData.restaurant_id,
-      user_id: restaurantData.user_id,
-      name: xss(restaurantData.name),
-      website: xss(restaurantData.website),
-      cuisine: restaurantData.cuisine,
-      city: xss(restaurantData.city),
-      state: xss(restaurantData.state),
-      cuisine_id: restaurantData.cuisine_id,
-      cuisine_name: xss(restaurantData.cuisine_name)
-    };
+  serializeRestaurants(restaurants) {
+    const restaurantsTree = new Treeize();
+    const restaurantsData = restaurantsTree.grow(restaurants).getData();
+    return restaurantsData;
+  },
+  serializeRestaurantEntry(entry) {
+    return this.serializeRestaurantEntries(entry)[0];
   },
   serializeRestaurantEntries(entries) {
-    return entries.map(this.serializeRestaurantEntry);
-  },
-  serializeRestaurantEntry(entryData) {
-    // const entryTree = new Treeize();
-    // const entryData = entryTree.grow([ entry ]).getData()[0];
+    const entriesTree = new Treeize();
+    const entriesData = entriesTree.grow(entries).getData();
     
-    return {
-      id: entryData.id,
-      date: entryData.date,
-      user_restaurant_id: entryData.user_restaurant_id,
-      user_id: entryData.user_id,
-      name: xss(entryData.name),
-      image: entryData.image,
-      description: xss(entryData.description),
-      entry_id: entryData.entry_id,
-    };
+    return entriesData;
   },
   serializeRestaurantsMain(restaurants) {
     return restaurants.map(this.serializeRestaurantMain);
   },
   serializeRestaurantMain(restaurantData) {
-    // const restaurantTree = new Treeize();
-    // const restaurantData = restaurantTree.grow([ restaurant ]).getData()[0];
-
     return {
       id: restaurantData.id, 
       name: xss(restaurantData.name),
@@ -133,9 +118,6 @@ const RestaurantsService = {
     };
   },
   serializeUserRestaurant(restaurantData) {
-    // const restaurantTree = new Treeize();
-    // const restaurantData = restaurantTree.grow([ restaurant ]).getData()[0];
-
     return {
       id: restaurantData.id,
       visited: restaurantData.visited,
