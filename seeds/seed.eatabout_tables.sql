@@ -9,7 +9,7 @@ TRUNCATE
     cuisines
     RESTART IDENTITY CASCADE;
 
-INSERT INTO cuisines (name)
+INSERT INTO cuisines (cuisine_name)
 VALUES
     ('Mexican'),
     ('Italian'),
@@ -53,9 +53,9 @@ VALUES
 
 INSERT INTO user_restaurants (visited, rating, description, date_visited, restaurant_id, user_id)
 VALUES
-    (false, null, null, null, 1, 1),
-    (true, 5, 'so good', now(), 2, 1),
-    (false, null, null, null, 3, 1);
+    (false, null, null, null, 1, 2),
+    (true, 5, 'so good', now(), 2, 2),
+    (false, null, null, null, 3, 2);
 
 INSERT INTO entries (user_restaurant_id, user_id)
 VALUES
@@ -63,7 +63,8 @@ VALUES
 
 INSERT INTO items (name, description, entry_id)
 VALUES 
-    ('spaghetti', 'good spaghetti', 1);
+    ('spaghetti', 'good spaghetti', 1),
+    ('appetizer', 'yummy', 1);
 
 
 
