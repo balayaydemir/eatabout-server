@@ -5,7 +5,7 @@ CREATE TABLE cuisines (
 
 CREATE TABLE restaurants (
     id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
+    name TEXT NOT NULL UNIQUE,
     website TEXT NOT NULL,
     cuisine INTEGER REFERENCES cuisines(cuisine_id) NOT NULL,
     city TEXT NOT NULL,

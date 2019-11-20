@@ -71,10 +71,11 @@ restaurantsRouter
 restaurantsRouter
     .route('/')
     .post(requireAuth, jsonBodyParser, (req, res, next) => {
-        const { visited, restaurant_id, user_id } = req.body;
-        const newUserRestaurant = { visited, restaurant_id, user_id };
+        const { visited, rating, description, date_visited, restaurant_id, user_id } = req.body;
+        const newUserRestaurantRequired = { visited, restaurant_id, user_id };
+        const newUserRestaurant = { visited, rating, description, date_visited, restaurant_id, user_id };
 
-        for (const [key, value] of Object.entries(newUserRestaurant))
+        for (const [key, value] of Object.entries(newUserRestaurantRequired))
             if (value == null)
                 return res.status(400).json({
                     error: `Missing '${key}' in request body`
