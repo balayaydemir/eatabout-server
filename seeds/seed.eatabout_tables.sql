@@ -55,6 +55,7 @@ INSERT INTO user_restaurants (visited, rating, description, date_visited, restau
 VALUES
     (false, null, null, null, 1, 2),
     (true, 5, 'so good', now(), 2, 2),
+    (true, 5, 'test', now(), 2, 2),
     (false, null, null, null, 3, 2);
 
 INSERT INTO entries (user_restaurant_id, user_id)

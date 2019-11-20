@@ -1,22 +1,38 @@
 const xss = require('xss');
-const Treeize = require('treeize');
+// const Treeize = require('treeize');
 
 const RestaurantsService = {
   getAllRestaurants(db, user_id) {
     return db
       .from('user_restaurants AS ur')
-      .select('*')
       .where('user_id', user_id)
+      .select(
+        'ur.id',
+        'ur.visited',
+        'ur.rating',
+        'ur.description',
+        'ur.date_visited',
+        'ur.restaurant_id',
+        'ur.user_id'
+      )
       .join(
         'restaurants AS res',
         'ur.restaurant_id',
         'res.id'
       )
+      .select('res.name', 'res.website', 'res.cuisine', 'res.city', 'res.state')
       .join(
         'cuisines AS cus',
         'res.cuisine',
-        'cus.cuisine_id'
-      );
+        'cus.id'
+      )
+      .select('cus.cuisine_name')
+      .groupBy('ur.id', 'res.id', 'cus.id');
+  },
+  getMainRestaurants(db) {
+    return db
+      .from('restaurants')
+      .select('*');
   },
   getById(db, id, user_id) {
     return RestaurantsService.getAllRestaurants(db, user_id)
@@ -48,12 +64,22 @@ const RestaurantsService = {
       .returning('*')
       .then(([restaurant]) => restaurant);
   },
+  updateUserRestaurant(db, id, newFields) {
+    return db('user_restaurants')
+      .where({ id })
+      .update(newFields);
+  },
+  deleteUserRestaurant(db, id) {
+    return db('user_restaurants')
+      .where({ id })
+      .delete();
+  },
   serializeRestaurants(restaurants) {
     return restaurants.map(this.serializeRestaurant);
   },
-  serializeRestaurant(restaurant) {
-    const restaurantTree = new Treeize();
-    const restaurantData = restaurantTree.grow([ restaurant ]).getData()[0];
+  serializeRestaurant(restaurantData) {
+    // const restaurantTree = new Treeize();
+    // const restaurantData = restaurantTree.grow([ restaurant ]).getData()[0];
 
     return {
       id: restaurantData.id,
@@ -75,9 +101,9 @@ const RestaurantsService = {
   serializeRestaurantEntries(entries) {
     return entries.map(this.serializeRestaurantEntry);
   },
-  serializeRestaurantEntry(entry) {
-    const entryTree = new Treeize();
-    const entryData = entryTree.grow([ entry ]).getData()[0]
+  serializeRestaurantEntry(entryData) {
+    // const entryTree = new Treeize();
+    // const entryData = entryTree.grow([ entry ]).getData()[0];
     
     return {
       id: entryData.id,
@@ -88,6 +114,36 @@ const RestaurantsService = {
       image: entryData.image,
       description: xss(entryData.description),
       entry_id: entryData.entry_id,
+    };
+  },
+  serializeRestaurantsMain(restaurants) {
+    return restaurants.map(this.serializeRestaurantMain);
+  },
+  serializeRestaurantMain(restaurantData) {
+    // const restaurantTree = new Treeize();
+    // const restaurantData = restaurantTree.grow([ restaurant ]).getData()[0];
+
+    return {
+      id: restaurantData.id, 
+      name: xss(restaurantData.name),
+      website: xss(restaurantData.website),
+      cuisine: restaurantData.cuisine,
+      city: xss(restaurantData.city),
+      state: xss(restaurantData.state),
+    };
+  },
+  serializeUserRestaurant(restaurantData) {
+    // const restaurantTree = new Treeize();
+    // const restaurantData = restaurantTree.grow([ restaurant ]).getData()[0];
+
+    return {
+      id: restaurantData.id,
+      visited: restaurantData.visited,
+      rating: restaurantData.rating,
+      description: xss(restaurantData.description),
+      date_visited: restaurantData.date_visited,
+      restaurant_id: restaurantData.restaurant_id,
+      user_id: restaurantData.user_id,
     };
   }
 };

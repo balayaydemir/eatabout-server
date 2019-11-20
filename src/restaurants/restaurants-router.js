@@ -9,8 +9,7 @@ const jsonBodyParser = express.json();
 
 restaurantsRouter
   .route('/')
-  .all(requireAuth)
-  .get((req, res, next) => {
+  .get(requireAuth, (req, res, next) => {
     RestaurantsService.getAllRestaurants(
       req.app.get('db'),
       req.user.id
@@ -23,96 +22,149 @@ restaurantsRouter
 
 restaurantsRouter
   .route('/:restaurant_id')
-  .all(requireAuth)
-  .all(checkRestaurantExists)
-  .get((req, res) => {
-      res.json(RestaurantsService.serializeRestaurant(res.restaurant))
+  .get(requireAuth, (req, res, next) => {
+    RestaurantsService.getById(
+      req.app.get('db'),
+      req.params.restaurant_id,
+      req.user.id
+    )
+      .then(restaurant => {
+        res.json(RestaurantsService.serializeRestaurant(restaurant));
+      })
+      .catch(next);
+    
   });
 
 restaurantsRouter
   .route('/:restaurant_id/entries/')
-  .all(requireAuth)
-  .all(checkRestaurantExists)
-  .get((req, res, next) => {
-      RestaurantsService.getRestaurantEntries(
-          req.app.get('db'),
-          req.params.restaurant_id
-      )
-        .then(entries => {
-            res.json(RestaurantsService.serializeRestaurantEntries(entries))
-        })
-        .catch(next)
-  })
-
- restaurantsRouter
-    .route('/all/:restaurant_id')
-    .post(requireAuth, jsonBodyParser, (req, res, next) => {
-        const { name, website, cuisine, city, state } = req.body;
-        const newRestaurant = { name, website, cuisine, city, state };
-        for (const [key, value] of Object.entries(newRestaurant))
-            if (value == null)
-                return res.status(400).json({
-                    error: `Missing '${key}' in request body`
-                });
-        
-        RestaurantsService.insertRestaurant(
-            req.app.get('db'),
-            newRestaurant
-        )
-            .then(restaurant => {
-                res
-                    .status(201)
-                    .location(path.posix.join(req.originalUrl, `/${restaurant.id}`))
-                    .json(restaurant)
-            })
-            .catch(next);
-    })
+  .get(requireAuth, (req, res, next) => {
+    RestaurantsService.getRestaurantEntries(
+      req.app.get('db'),
+      req.params.restaurant_id
+    )
+      .then(entries => {
+        res.json(RestaurantsService.serializeRestaurantEntries(entries));
+      })
+      .catch(next);
+  });
 
 restaurantsRouter
-    .route('/')
-    .post(requireAuth, jsonBodyParser, (req, res, next) => {
-        const { visited, rating, description, date_visited, restaurant_id, user_id } = req.body;
-        const newUserRestaurantRequired = { visited, restaurant_id, user_id };
-        const newUserRestaurant = { visited, rating, description, date_visited, restaurant_id, user_id };
-
-        for (const [key, value] of Object.entries(newUserRestaurantRequired))
-            if (value == null)
-                return res.status(400).json({
-                    error: `Missing '${key}' in request body`
-                });
+  .route('/all')
+  .post(requireAuth, jsonBodyParser, (req, res, next) => {
+    const { name, website, cuisine, city, state } = req.body;
+    const newRestaurant = { name, website, cuisine, city, state };
+    for (const [key, value] of Object.entries(newRestaurant))
+      if (value == null)
+        return res.status(400).json({
+          error: `Missing '${key}' in request body`
+        });
         
-        newUserRestaurant.user_id = req.user.id;
-        RestaurantsService.insertUserRestaurant(
-            req.app.get('db'), 
-            newUserRestaurant,
-            req.user.id
-        )
-            .then(restaurant => {
-                res
-                    .status(201)
-                    .location(path.posix.join(req.originalUrl, `/${restaurant.id}`))
-                    .json(restaurant)
-            })
-            .catch(next);
-    })
+    RestaurantsService.insertRestaurant(
+      req.app.get('db'),
+      newRestaurant
+    )
+      .then(restaurant => {
+        res
+          .status(201)
+          .location(path.posix.join(req.originalUrl, `/${restaurant.id}`))
+          .json(RestaurantsService.serializeRestaurantMain(restaurant));
+      })
+      .catch(next);
+  });
 
+restaurantsRouter
+  .route('/')
+  .post(requireAuth, jsonBodyParser, (req, res, next) => {
+    const { visited, rating, description, date_visited, restaurant_id, user_id } = req.body;
+    const newUserRestaurantRequired = { visited, restaurant_id, user_id };
+    const newUserRestaurant = { visited, rating, description, date_visited, restaurant_id, user_id };
 
-async function checkRestaurantExists(req, res, next) {
-    try {
-        const restaurant = await RestaurantsService.getById(
-            req.app.get('db'),
-            req.params.restaurant_id,
-            res.user.id
-        )
-        if (!restaurant)
-            return res.status(404).json({
-                error: 'Restaurant doesn\'t exist'
-            })
-        res.restaurant = restaurant
-        next()
-    } catch (error) {
-        next(error)
+    for (const [key, value] of Object.entries(newUserRestaurantRequired))
+      if (value == null)
+        return res.status(400).json({
+          error: `Missing '${key}' in request body`
+        });
+        
+    newUserRestaurant.user_id = req.user.id;
+    RestaurantsService.insertUserRestaurant(
+      req.app.get('db'), 
+      newUserRestaurant,
+      req.user.id
+    )
+      .then(restaurant => {
+        res
+          .status(201)
+          .location(path.posix.join(req.originalUrl, `/${restaurant.id}`))
+          .json(RestaurantsService.serializeUserRestaurant(restaurant));
+      })
+      .catch(next);
+  });
+
+restaurantsRouter
+  .route('/:restaurant_id')
+  .patch(requireAuth, jsonBodyParser, (req, res, next) => {
+    const { visited, rating, description, date_visited } = req.body;
+    const newFields = { visited, rating, description, date_visited };
+
+    if (rating == null || date_visited == null) {
+      return res.status(400).json({
+        error: 'Request body must contain \'rating\' and \'date_visited\''
+      });
     }
-}
+    
+    RestaurantsService.updateUserRestaurant(
+      req.app.get('db'),
+      req.params.restaurant_id,
+      newFields
+    )
+      .then(() => {
+        res.status(204).end();
+      })
+      .catch(next);
+  });
+
+restaurantsRouter
+  .route('/:restaurant_id')
+  .delete(requireAuth, (req, res, next) => {
+    RestaurantsService.deleteUserRestaurant(
+      req.app.get('db'),
+      req.params.restaurant_id
+    )
+      .then(() => {
+        res.status(204).end();
+      })
+      .catch(next);
+  });
+
+restaurantsRouter
+  .route('/all')
+  .get(requireAuth, (req, res, next) => {
+    RestaurantsService.getMainRestaurants(
+      req.app.get('db')
+    )
+      .then(restaurants => {
+        res.json(RestaurantsService.serializeRestaurantsMain(restaurants));
+      })
+      .catch(next);
+  });
+
+
+// async function checkRestaurantExists(req, res, next) {
+//     try {
+//         const restaurant = await RestaurantsService.getById(
+//             req.app.get('db'),
+//             req.params.restaurant_id,
+//             req.user.id
+//         )
+//         if (!restaurant)
+//             return res.status(404).json({
+//                 error: 'Restaurant doesn\'t exist'
+//             })
+//         res.restaurant = restaurant
+//         next()
+//     } catch (error) {
+//         next(error)
+//     }
+// }
 
 module.exports = restaurantsRouter;
