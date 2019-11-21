@@ -8,6 +8,7 @@ const authRouter = require('./auth/auth-router');
 const usersRouter = require('./users/users-router');
 const restaurantsRouter = require('./restaurants/restaurants-router');
 const entriesRouter = require('./entries/entries-router');
+const itemsRouter = require('./items/items-router');
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/restaurants', restaurantsRouter);
 app.use('/api/entries', entriesRouter);
+app.use('/api/items', itemsRouter);
 
 app.use(function errorHandler(error, req, res, next) {
   let response;

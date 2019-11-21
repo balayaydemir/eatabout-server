@@ -15,7 +15,7 @@ restaurantsRouter
       req.user.id
     )
       .then(restaurants => {
-        res.json(RestaurantsService.serializeRestaurants(restaurants));
+        res.json(RestaurantsService.treeizeRestaurants(restaurants));
       })
       .catch(next);
   })
@@ -25,7 +25,7 @@ restaurantsRouter
     const newUserRestaurant = { visited, rating, description, date_visited, restaurant_id, user_id };
 
     for (const [key, value] of Object.entries(newUserRestaurantRequired))
-      if (value == null)
+      if (value === null)
         return res.status(400).json({
           error: `Missing '${key}' in request body`
         });
@@ -40,7 +40,7 @@ restaurantsRouter
         res
           .status(201)
           .location(path.posix.join(req.originalUrl, `/${restaurant.id}`))
-          .json(restaurant);
+          .json(RestaurantsService.serializeUserRestaurant(restaurant));
       })
       .catch(next);
   });
@@ -54,15 +54,15 @@ restaurantsRouter
       req.user.id
     )
       .then(restaurant => {
-        res.json(RestaurantsService.serializeRestaurant(restaurant));
+        res.json(RestaurantsService.treeizeRestaurant(restaurant));
       })
       .catch(next);
   })
   .patch(requireAuth, jsonBodyParser, (req, res, next) => {
-    const { visited, rating, description, date_visited } = req.body;
-    const newFields = { visited, rating, description, date_visited };
+    const { visited, rating, date_visited } = req.body;
+    const newFields = { visited, rating, date_visited };
 
-    if (rating == null || date_visited == null) {
+    if (rating === null || date_visited === null) {
       return res.status(400).json({
         error: 'Request body must contain \'rating\' and \'date_visited\''
       });
@@ -97,7 +97,7 @@ restaurantsRouter
       req.params.restaurant_id
     )
       .then(entries => {
-        res.json(RestaurantsService.serializeRestaurantEntries(entries));
+        res.json(RestaurantsService.treeizeRestaurantEntries(entries));
       })
       .catch(next);
   });
@@ -117,7 +117,7 @@ restaurantsRouter
     const { name, website, cuisine, city, state } = req.body;
     const newRestaurant = { name, website, cuisine, city, state };
     for (const [key, value] of Object.entries(newRestaurant))
-      if (value == null)
+      if (value === null)
         return res.status(400).json({
           error: `Missing '${key}' in request body`
         });

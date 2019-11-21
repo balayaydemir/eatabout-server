@@ -23,7 +23,7 @@ entriesRouter
     const newEntry = { date, user_restaurant_id, user_id };
 
     for (const [key, value] of Object.entries(newEntry))
-      if (value == null) 
+      if (value === null) 
         return res.status(400).json({
           error: `Request body must contain ${key}`
         });
@@ -51,6 +51,16 @@ entriesRouter
     )
       .then(entry => {
         res.json(EntriesService.serializeEntry(entry));
+      })
+      .catch(next);
+  })
+  .delete(requireAuth, (req, res, next) => {
+    EntriesService.deleteEntry(
+      req.app.get('db'),
+      req.params.entry_id
+    )
+      .then(() => {
+        res.status(204).end();
       })
       .catch(next);
   });

@@ -50,6 +50,7 @@ const RestaurantsService = {
         'ent.date',
         'ent.user_restaurant_id',
         'ent.user_id',
+        'itm.id AS items:id',
         'itm.name AS items:name',
         'itm.image AS items:image',
         'itm.description AS items:description',
@@ -87,18 +88,15 @@ const RestaurantsService = {
       .where({ id })
       .delete();
   },
-  serializeRestaurant(restaurant) {
+  treeizeRestaurant(restaurant) {
     return this.serializeRestaurants(restaurant)[0];
   },
-  serializeRestaurants(restaurants) {
+  treeizeRestaurants(restaurants) {
     const restaurantsTree = new Treeize();
     const restaurantsData = restaurantsTree.grow(restaurants).getData();
     return restaurantsData;
   },
-  serializeRestaurantEntry(entry) {
-    return this.serializeRestaurantEntries(entry)[0];
-  },
-  serializeRestaurantEntries(entries) {
+  treeizeRestaurantEntries(entries) {
     const entriesTree = new Treeize();
     const entriesData = entriesTree.grow(entries).getData();
     

@@ -34,6 +34,12 @@ const EntriesService = {
     return EntriesService.getAllEntries(db, user_id)
       .where('ent.id', id);  
   },
+  deleteEntry(db, id) {
+    return db
+      .from('entries')
+      .where({ id })
+      .delete();
+  },
   serializeEntries(entries) {
     const entriesTree = new Treeize();
     const entriesData = entriesTree.grow(entries).getData();

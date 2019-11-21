@@ -55,23 +55,20 @@ INSERT INTO user_restaurants (visited, rating, description, date_visited, restau
 VALUES
     (false, null, null, null, 1, 2),
     (true, 5, 'so good', now(), 2, 2),
-    (true, 5, 'test', now(), 2, 2),
-    (false, null, null, null, 3, 2);
+    (true, 5, 'test', now(), 3, 2);
+ 
 
 INSERT INTO entries (user_restaurant_id, user_id)
 VALUES
     (2, 2),
-    (3, 2),
-    (4, 2);
+    (3, 2);
 
 INSERT INTO items (name, description, entry_id)
 VALUES 
     ('spaghetti', 'good spaghetti', 1),
     ('appetizer', 'yummy', 1),
     ('test', 'test', 2),
-    ('test', 'test', 2),
-    ('test', 'test', 3),
-    ('test', 'test', 3);
+    ('test', 'test', 2);
 
 
 
