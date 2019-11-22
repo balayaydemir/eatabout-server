@@ -59,8 +59,8 @@ restaurantsRouter
       .catch(next);
   })
   .patch(requireAuth, jsonBodyParser, (req, res, next) => {
-    const { visited, rating, date_visited } = req.body;
-    const newFields = { visited, rating, date_visited };
+    const { visited, rating, date_visited, description } = req.body;
+    const newFields = { visited, rating, date_visited, description };
 
     if (rating === null || date_visited === null) {
       return res.status(400).json({
