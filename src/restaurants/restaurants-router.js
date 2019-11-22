@@ -20,9 +20,9 @@ restaurantsRouter
       .catch(next);
   })
   .post(requireAuth, jsonBodyParser, (req, res, next) => {
-    const { visited, rating, description, date_visited, restaurant_id, user_id } = req.body;
-    const newUserRestaurantRequired = { visited, restaurant_id, user_id };
-    const newUserRestaurant = { visited, rating, description, date_visited, restaurant_id, user_id };
+    const { visited, rating, description, date_visited, restaurant_id } = req.body;
+    const newUserRestaurantRequired = { visited, restaurant_id };
+    const newUserRestaurant = { visited, rating, description, date_visited, restaurant_id };
 
     for (const [key, value] of Object.entries(newUserRestaurantRequired))
       if (value === null)

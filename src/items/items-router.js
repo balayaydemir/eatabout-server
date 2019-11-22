@@ -10,8 +10,8 @@ const jsonBodyParser = express.json();
 itemsRouter
   .route('/')
   .post(requireAuth, jsonBodyParser, (req, res, next) => {
-    const { name, image, description, entry_id } = req.body;
-    const newItem = { name, image, description, entry_id };
+    const { name, description, entry_id } = req.body;
+    const newItem = { name, description, entry_id };
        
     if (name === null || entry_id === null) {
       return res.status(400).json({

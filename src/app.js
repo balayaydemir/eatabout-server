@@ -9,6 +9,7 @@ const usersRouter = require('./users/users-router');
 const restaurantsRouter = require('./restaurants/restaurants-router');
 const entriesRouter = require('./entries/entries-router');
 const itemsRouter = require('./items/items-router');
+const cuisinesRouter = require('./cuisines/cuisines-router');
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use('/api/users', usersRouter);
 app.use('/api/restaurants', restaurantsRouter);
 app.use('/api/entries', entriesRouter);
 app.use('/api/items', itemsRouter);
+app.use('/api/cuisines', cuisinesRouter);
 
 app.use(function errorHandler(error, req, res, next) {
   let response;
