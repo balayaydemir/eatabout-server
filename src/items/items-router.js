@@ -3,15 +3,18 @@ const ItemsService = require('./items-service');
 const { requireAuth } = require('../middleware/jwt-auth');
 const path = require('path');
 
+
 const itemsRouter = express.Router();
 const jsonBodyParser = express.json();
+
 
 
 itemsRouter
   .route('/')
   .post(requireAuth, jsonBodyParser, (req, res, next) => {
-    const { name, description, entry_id } = req.body;
-    const newItem = { name, description, entry_id };
+    const { name, description, entry_id, image } = req.body;
+    const newItem = { name, description, entry_id, image };
+
        
     if (name === null || entry_id === null) {
       return res.status(400).json({
