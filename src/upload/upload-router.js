@@ -4,18 +4,17 @@ const multer = require('multer');
 
 
 const uploadRouter = express.Router();
-
 let storage = multer.diskStorage({
   destination: function(req, file, callback) {
-    callback(null, __dirname + '/uploads');
+    callback(null, __dirname + '/../../public/uploads');
   },
   filename: function(req, file, callback) {
     callback(null, file.fieldname + '-' + Date.now());
   }
 });
 
-uploadRouter.post('/', function(req, res) {
-  let upload = multer({ storage: storage }).single('userFile');
+uploadRouter.post('/', requireAuth, function(req, res) {
+  let upload = multer({ storage: storage }).single('photo_upload');
   upload(req, res, function(err) {
     if (err) {
       return res.end('cannot upload');
