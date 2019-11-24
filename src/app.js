@@ -10,11 +10,11 @@ const restaurantsRouter = require('./restaurants/restaurants-router');
 const entriesRouter = require('./entries/entries-router');
 const itemsRouter = require('./items/items-router');
 const cuisinesRouter = require('./cuisines/cuisines-router');
+const uploadRouter = require('./upload/upload-router');
+
 
 
 const app = express();
-
-
 
 app.use(morgan((NODE_ENV === 'production') ? 'tiny' : 'common', {
   skip: () => NODE_ENV === 'test',
@@ -22,12 +22,15 @@ app.use(morgan((NODE_ENV === 'production') ? 'tiny' : 'common', {
 app.use(helmet());
 app.use(cors());
 
+
+
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/restaurants', restaurantsRouter);
 app.use('/api/entries', entriesRouter);
 app.use('/api/items', itemsRouter);
 app.use('/api/cuisines', cuisinesRouter);
+app.use('/api/upload',uploadRouter);
 
 app.use(function errorHandler(error, req, res, next) {
   let response;
