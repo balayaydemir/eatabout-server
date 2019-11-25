@@ -38,6 +38,16 @@ authRouter
           });
       })
       .catch(next);
+  })
+  .get('/:user_name', (req, res, next) => {
+    AuthService.getUserWithUsername(
+      req.app.get('db'),
+      req.params.user_name
+    )
+      .then(user => {
+        return res.status(200).json(user);
+      })
+      .catch(next);
   });
 
 module.exports = authRouter;
