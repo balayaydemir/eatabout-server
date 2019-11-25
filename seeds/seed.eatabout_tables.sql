@@ -44,7 +44,7 @@ VALUES
     ('Kettner Exchange', 'https://www.kettnerexchange.com/', 4, 'San Diego', 'CA'),
     ('Momofuku Noodle Bar', 'https://momofukunoodlebar.com/', 7, 'New York', 'NY'),
     ('Bosphorous Turkish Cuisine', 'https://www.bosphorousrestaurant.com/', 20, 'Orlando', 'FL'),
-    (`Franklin's Barbecue`, 'https://franklinbbq.com/', 22, 'Austin', 'TX'),
+    ('Franklins Barbecue', 'https://franklinbbq.com/', 22, 'Austin', 'TX'),
     ('Alinea', 'https://www.alinearestaurant.com/', 4, 'Chicago', 'IL'),
     ('Yokohama Yakitori Koubou', 'https://yokohamayakitorikoubou.com/', 7, 'San Diego', 'CA');
 
@@ -58,7 +58,7 @@ VALUES
     (false, null, null, null, 5, 1),
     (false, null, null, null, 4, 1),
     (true, 3, 'Not like the food in Turkey!', '2029-01-22T16:28:32.615Z', 3, 1),
-    (true, 4, `It's a close tie between this place and Ippudo for best Ramen in NYC`, '2029-01-22T16:28:32.615Z', 2, 1),
+    (true, 4, 'A close tie between this place and Ippudo for best Ramen in NYC', '2029-01-22T16:28:32.615Z', 2, 1),
     (true, 5, 'Would kill for the Szechuan noodles here!', '2029-01-22T16:28:32.615Z', 1, 1);
 
 
