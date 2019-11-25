@@ -11,6 +11,7 @@ const EntriesService = {
         'ent.date',
         'ent.user_restaurant_id',
         'ent.user_id',
+        'itm.id AS items:id',
         'itm.name AS items:name',
         'itm.image AS items:image',
         'itm.description AS items:description',

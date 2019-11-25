@@ -77,19 +77,19 @@ function makeEntriesArray(user_restaurants, users) {
   return [
     {
       id: 1,
-      date: "now()",
+      date: "2029-01-22T16:28:32.615Z",
       user_restaurant_id: user_restaurants[1].id,
       user_id: users[0].id,
     },
     {
       id: 2,
-      date: "now()",
+      date: "2029-01-22T16:28:32.615Z",
       user_restaurant_id: user_restaurants[1].id,
       user_id: users[0].id,
     },
     {
       id: 3,
-      date: "now()",
+      date: "2029-01-22T16:28:32.615Z",
       user_restaurant_id: user_restaurants[1].id,
       user_id: users[0].id,
     },
@@ -101,21 +101,21 @@ function makeItemsArray(entries) {
     {
       id: 1,
       name: 'spaghetti',
-      image: null,
+      image: 'test',
       description: 'yummy',
       entry_id: entries[0].id,
     },
     {
       id: 2,
       name: 'spaghetti',
-      image: null,
+      image: 'test',
       description: 'yummy',
       entry_id: entries[1].id,
     },
     {
       id: 3,
       name: 'spaghetti',
-      image: null,
+      image: 'test',
       description: 'yummy',
       entry_id: entries[2].id,
     },
@@ -210,10 +210,68 @@ function seedUsers(db, users) {
     )
 }
 
-function makeExpectedUserRestaurants(user, user_restaurants, restaurants) {
+function makeExpectedEntries(entries, items) {
+  const expectedResult = entries.map(entry => {
+    const entryItems = items.find(itm => itm.entry_id === entry.id)
+    return {
+      id: entry.id,
+      date: entry.date,
+      user_restaurant_id: entry.user_restaurant_id,
+      user_id: entry.user_id,
+      items: [entryItems]
+    }
+  })
+  return expectedResult
+}
+
+function makeExpectedRestaurants(user_restaurants, restaurants, cuisines) {
+  const expectedResult = user_restaurants.map(itm => {
+    const restaurant = restaurants.find(restaurant => restaurant.id === itm.restaurant_id)
+    const cuisine = cuisines.find(cuisine => cuisine.id === restaurant.cuisine)
+    if (itm.visited === true) {
+      return {
+        id: itm.id,
+        visited: itm.visited,
+        rating: itm.rating,
+        description: itm.description,
+        date_visited: itm.date_visited,
+        restaurant_id: itm.restaurant_id,
+        user_id: itm.user_id,
+        restaurant: {
+          name: restaurant.name,
+          website: restaurant.website,
+          cuisine: restaurant.cuisine,
+          city: restaurant.city,
+          state: restaurant.state,
+          cuisine_name: cuisine.cuisine_name
+        }
+      }
+    } else {
+      return {
+        id: itm.id,
+        visited: itm.visited,
+        restaurant_id: itm.restaurant_id,
+        user_id: itm.user_id,
+        restaurant: {
+          name: restaurant.name,
+          website: restaurant.website,
+          cuisine: restaurant.cuisine,
+          city: restaurant.city,
+          state: restaurant.state,
+          cuisine_name: cuisine.cuisine_name
+        }
+      }
+    }
+  })
+  return expectedResult
+}
+
+function makeExpectedUserRestaurants(user, user_restaurants, restaurants, cuisines) {
   const userRestaurants = user_restaurants.filter(restaurant => restaurant.user_id === user.id);
   const expectedResult = userRestaurants.map(userRestaurant => {
     const restaurant = restaurants.find(restaurant => restaurant.id === userRestaurant.restaurant_id)
+    const cuisine = cuisines.find(cuisine => cuisine.id === restaurant.cuisine)
+    if (userRestaurant.visited === true) {
     return {
       id: userRestaurant.id,
       visited: userRestaurant.visited,
@@ -228,11 +286,43 @@ function makeExpectedUserRestaurants(user, user_restaurants, restaurants) {
         cuisine: restaurant.cuisine,
         city: restaurant.city,
         state: restaurant.state,
-        cuisine_name: restaurant.cuisine_name
+        cuisine_name: cuisine.cuisine_name
       }
     }
+  } else {
+    return {
+      id: userRestaurant.id,
+      visited: userRestaurant.visited,
+      restaurant_id: userRestaurant.restaurant_id,
+      user_id: userRestaurant.user_id,
+      restaurant: {
+        name: restaurant.name,
+        website: restaurant.website,
+        cuisine: restaurant.cuisine,
+        city: restaurant.city,
+        state: restaurant.state,
+        cuisine_name: cuisine.cuisine_name
+      }
+    }
+  }
   })
   return expectedResult;
+}
+
+function makeExpectedRestaurantEntries(restaurantId, entries, items) {
+  const restaurantEntries = entries.filter(entry => entry.user_restaurant_id === restaurantId)
+  const expectedResult = restaurantEntries.map(entry => {
+    const entryItems = items.find(itm => itm.entry_id === entry.id)
+    return {
+      id: entry.id,
+      date: entry.date,
+      user_restaurant_id: entry.user_restaurant_id,
+      user_id: entry.user_id,
+      items: [entryItems]
+    }
+  })
+  return expectedResult
+
 }
 
 function seedTables(db, users, cuisines, restaurants, user_restaurants, entries, items) {
@@ -289,5 +379,8 @@ module.exports = {
   makeAuthHeader,
   cleanTables,
   makeExpectedUserRestaurants,
-  seedTables
+  seedTables,
+  makeExpectedRestaurants,
+  makeExpectedRestaurantEntries,
+  makeExpectedEntries,
 }
