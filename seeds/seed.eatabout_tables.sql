@@ -50,7 +50,7 @@ VALUES
 
 INSERT INTO users (user_name, full_name, password)
 VALUES
-    ('demo_user', 'Demo User', '$2y$12$F7GMOOzOd11w/8sza67VzelfEVT/0FK8niesXiV8Tq8IgyydEx5/C');
+    ('demo_user', 'Demo User', '$2a$12$HoPB5AqZ6YZ5Eqhw7C6o9eEGp3wuwdHDfWn4O86/bu542XrQSyapK');
 
 INSERT INTO user_restaurants (visited, rating, description, date_visited, restaurant_id, user_id)
 VALUES
