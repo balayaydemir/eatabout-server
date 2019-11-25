@@ -10,10 +10,9 @@
     "migrate:test": "env NODE_ENV=test npm run migrate",
     "migrate:production": "env SSL=true DATABASE_URL=$(heroku config:get DATABASE_URL) npm run migrate",
     "seed": "psql -U eatabout-admin -d eatabout -f ./seeds/seed.eatabout_tables.sql",
-    "seed:production": "env SSL=true DATABASE_URL=$(heroku config:get DATABASE_URL) npm run seed",
     "seed:test": "psql -U eatabout-admin -d eatabout-test -f ./seeds/seed.eatabout_tables.sql",
     "start": "node src/server.js",
-    "predeploy": "npm audit && npm run migrate:production && npm run seed:production",
+    "predeploy": "npm audit && npm run migrate:production",
     "deploy": "git push heroku master"
   },
   "keywords": [],
