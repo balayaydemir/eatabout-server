@@ -31,7 +31,7 @@ let checkFileType = (file, callback) => {
 uploadRouter.post('/', requireAuth, function(req, res) {
   let upload = multer({ 
     storage: storage,
-    limits: {fileSize: 1000000},
+    limits: {fileSize: 3000000},
     fileFilter: (req, file, callback) => {
       checkFileType(file, callback);
     } 
@@ -39,7 +39,7 @@ uploadRouter.post('/', requireAuth, function(req, res) {
   upload(req, res, function(err) {
     if (err) {
       return res.status(400).json({
-        error: 'Image too large - please select an image that is 1MB or less'
+        error: 'Image too large - please select an image that is 3MB or less'
       });
     }
     res.json(req.file.filename);
