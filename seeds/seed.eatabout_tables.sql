@@ -41,34 +41,27 @@ VALUES
 
 INSERT INTO restaurants (name, website, cuisine, city, state)
 VALUES
-    ('Restaurant1', 'www.google.com', 3, 'San Diego', 'CA'),
-    ('Restaurant2', 'www.google.com', 4, 'San Diego', 'CA'),
-    ('Restaurant3', 'www.google.com', 3, 'San Diego', 'CA');
+    ('Kettner Exchange', 'https://www.kettnerexchange.com/', 4, 'San Diego', 'CA'),
+    ('Momofuku Noodle Bar', 'https://momofukunoodlebar.com/', 7, 'New York', 'NY'),
+    ('Bosphorous Turkish Cuisine', 'https://www.bosphorousrestaurant.com/', 20, 'Orlando', 'FL'),
+    (`Franklin's Barbecue`, 'https://franklinbbq.com/', 22, 'Austin', 'TX'),
+    ('Alinea', 'https://www.alinearestaurant.com/', 4, 'Chicago', 'IL'),
+    ('Yokohama Yakitori Koubou', 'https://yokohamayakitorikoubou.com/', 7, 'San Diego', 'CA');
 
 INSERT INTO users (user_name, full_name, password)
 VALUES
-    ('demo', 'demo user', '$2y$12$4KicpRLvnxyD99/Q/JZEnuXsPc1z0CIwfyb6Zix8LrEhvQ6IwQNg.'),
-    ('balay', 'Balay Aydemir', '$2y$12$6ZjKGRO23yGY/rl1oi0sfug6ElHdGRLRkfx95LfPsF/DxlVPwwQka'),
-    ('ismail', 'Ismail Aydemir', '$2y$12$wcJ5lch2oA8SwTz83tM.HeruSZwZPsJktQ.abjFez9wrlCB8IDIxy');
+    ('demo_user', 'Demo User', '$2y$12$F7GMOOzOd11w/8sza67VzelfEVT/0FK8niesXiV8Tq8IgyydEx5/C');
 
 INSERT INTO user_restaurants (visited, rating, description, date_visited, restaurant_id, user_id)
 VALUES
-    (false, null, null, null, 1, 2),
-    (true, 5, 'so good', now(), 2, 2),
-    (true, 5, 'test', now(), 3, 2);
- 
+    (false, null, null, null, 6, 1),
+    (false, null, null, null, 5, 1),
+    (false, null, null, null, 4, 1),
+    (true, 3, 'Not like the food in Turkey!', '2029-01-22T16:28:32.615Z', 3, 1),
+    (true, 4, `It's a close tie between this place and Ippudo for best Ramen in NYC`, '2029-01-22T16:28:32.615Z', 2, 1),
+    (true, 5, 'Would kill for the Szechuan noodles here!', '2029-01-22T16:28:32.615Z', 1, 1);
 
-INSERT INTO entries (user_restaurant_id, user_id)
-VALUES
-    (2, 2),
-    (3, 2);
 
-INSERT INTO items (name, description, entry_id)
-VALUES 
-    ('spaghetti', 'good spaghetti', 1),
-    ('appetizer', 'yummy', 1),
-    ('test', 'test', 2),
-    ('test', 'test', 2);
 
 
 
