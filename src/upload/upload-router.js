@@ -10,7 +10,7 @@ const uploadRouter = express.Router();
 
 let storage = multer.diskStorage({
   destination: function(req, file, callback) {
-    callback(null, __dirname + '/../../public/uploads');
+    callback(null, '/tmp')//__dirname + '/../../public/uploads');
   },
   filename: function(req, file, callback) {
     callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
@@ -40,7 +40,7 @@ uploadRouter.post('/', requireAuth, function(req, res) {
   }).single('photo_upload');
   upload(req, res, function(err) {
     if (err) {
-      return res.status(400).json(err);
+      return res.status(400).json(__dirname);
     }
     res.json(req.file.filename);
   });
