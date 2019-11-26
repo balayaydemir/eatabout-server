@@ -7,6 +7,7 @@ const path = require('path');
 const uploadRouter = express.Router();
 
 
+
 let storage = multer.diskStorage({
   destination: function(req, file, callback) {
     callback(null, __dirname + '/../../public/uploads');
@@ -29,6 +30,7 @@ let checkFileType = (file, callback) => {
 };
 
 uploadRouter.post('/', requireAuth, function(req, res) {
+
   let upload = multer({ 
     storage: storage,
     limits: {fileSize: 3000000},
@@ -38,9 +40,7 @@ uploadRouter.post('/', requireAuth, function(req, res) {
   }).single('photo_upload');
   upload(req, res, function(err) {
     if (err) {
-      return res.status(400).json({
-        error: 'Image too large - please select an image that is 3MB or less'
-      });
+      return res.status(400).json(__dirname);
     }
     res.json(req.file.filename);
   });
