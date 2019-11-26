@@ -7,15 +7,10 @@ const fs = require('fs')
 
 const uploadRouter = express.Router();
 
-try {
-  fs.mkdirSync(path.join(__dirname, '/static/uploads/'))
-} catch (err) {
-  if (err.code !== 'EEXIST') throw err
-}
 
 let storage = multer.diskStorage({
   destination: function(req, file, callback) {
-    callback(null, __dirname + '/../../public/uploads');
+    callback(null, __dirname + '/tmp');
   },
   filename: function(req, file, callback) {
     callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
