@@ -57,7 +57,6 @@ uploadRouter.post('/', upload, requireAuth, function(req, res) {
 
   if (req.file) {
     const file = dataUri(req).content;
-    console.log(CLOUDINARY_URL)
     cloudinary.uploader.upload(file).then((result) => {
       const image = result.url;
       
