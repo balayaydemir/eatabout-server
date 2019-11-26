@@ -4,4 +4,5 @@ module.exports = {
   DATABASE_URL: process.env.DATABASE_URL || 'postgresql://eatabout-admin@localhost/eatabout',
   CLIENT_ORIGIN: 'https://eatabout-app.balayaydemir.now.sh',
   JWT_SECRET: process.env.JWT_SECRET || '8854829f-fd62-4b0b-8f92-66ae25a53a16',
+  CLOUDINARY_URL: process.env.CLOUDINARY_URL
 };
