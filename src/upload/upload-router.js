@@ -2,7 +2,7 @@ const express = require('express');
 const { requireAuth } = require('../middleware/jwt-auth');
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs')
+
 
 
 const uploadRouter = express.Router();
@@ -10,7 +10,7 @@ const uploadRouter = express.Router();
 
 let storage = multer.diskStorage({
   destination: function(req, file, callback) {
-    callback(null, __dirname + '/tmp');
+    callback(null, '/tmp');//__dirname + '/tmp');
   },
   filename: function(req, file, callback) {
     callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
