@@ -2,11 +2,16 @@ const express = require('express');
 const { requireAuth } = require('../middleware/jwt-auth');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs')
 
 
 const uploadRouter = express.Router();
 
-
+try {
+  fs.mkdirSync(path.join(__dirname, '/static/uploads/'))
+} catch (err) {
+  if (err.code !== 'EEXIST') throw err
+}
 
 let storage = multer.diskStorage({
   destination: function(req, file, callback) {
@@ -40,7 +45,7 @@ uploadRouter.post('/', requireAuth, function(req, res) {
   }).single('photo_upload');
   upload(req, res, function(err) {
     if (err) {
-      return res.status(400).json(__dirname);
+      return res.status(400).json(err);
     }
     res.json(req.file.filename);
   });
