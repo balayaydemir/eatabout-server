@@ -17,14 +17,14 @@ const dataUri = req => dUri.format(path.extname(req.file.originalname).toString(
 const uploadRouter = express.Router();
 
 
-let storage = multer.diskStorage({
+/*let storage = multer.diskStorage({
   destination: function(req, file, callback) {
     callback(null, '/tmp'); //__dirname + '/../../public/uploads');
   },
   filename: function(req, file, callback) {
     callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   }
-});
+});*/
 
 let storage2 = multer.memoryStorage();
 
@@ -57,6 +57,7 @@ uploadRouter.post('/', upload, requireAuth, function(req, res) {
 
   if (req.file) {
     const file = dataUri(req).content;
+    console.log(file);
     cloudinary.uploader.upload(file).then((result) => {
       const image = result.url;
       return res.status(200).json(image);
