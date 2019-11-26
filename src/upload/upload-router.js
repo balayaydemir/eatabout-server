@@ -44,7 +44,7 @@ let checkFileType = (file, callback) => {
 let upload = multer({
   storage: storage2,
   limits: {
-    fileSize: 1000000
+    fileSize: 3000000
   },
   fileFilter: (req, file, callback) => {
     checkFileType(file, callback);
