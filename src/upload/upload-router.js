@@ -40,7 +40,7 @@ uploadRouter.post('/', requireAuth, function(req, res) {
   }).single('photo_upload');
   upload(req, res, function(err) {
     if (err) {
-      return res.status(400).json(__dirname);
+      return res.status(400).json(err);
     }
     res.json(req.file.filename);
   });
