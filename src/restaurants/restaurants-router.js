@@ -138,22 +138,6 @@ restaurantsRouter
   });
 
 
-// async function checkRestaurantExists(req, res, next) {
-//     try {
-//         const restaurant = await RestaurantsService.getById(
-//             req.app.get('db'),
-//             req.params.restaurant_id,
-//             req.user.id
-//         )
-//         if (!restaurant)
-//             return res.status(404).json({
-//                 error: 'Restaurant doesn\'t exist'
-//             })
-//         res.restaurant = restaurant
-//         next()
-//     } catch (error) {
-//         next(error)
-//     }
-// }
+
 
 module.exports = restaurantsRouter;
